@@ -14,10 +14,14 @@ class CreateCompaniesAndSectorsTable extends Migration
     public function up()
     {
         Schema::create('companies_and_sectors', function (Blueprint $table) {
-            $table->integer('company_id')->unsigned();
-            $table->integer('sector_id')->unsigned();
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
-            $table->foreign('sector_id')->references('id')->on('sectors')->onDelete('cascade');
+            $table->id();
+            $table->unsignedBiginteger('company_id')->unsigned();
+            $table->unsignedBiginteger('sector_id')->unsigned();
+
+            $table->foreign('company_id')->references('id')
+                 ->on('companies')->onDelete('cascade');
+            $table->foreign('sector_id')->references('id')
+                ->on('sectors')->onDelete('cascade');
         });
     }
 

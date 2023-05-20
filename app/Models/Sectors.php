@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Companies;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Sectors extends Model
 {
-    protected $fillable = ['name'];
+    use HasFactory;
 
-    public function sectors()
+    public function companies()
     {
-        return $this->belongsToMany(Role::class, 'companies_and_sectors');
+        return $this->belongsToMany(Companies::class,  'companies_and_sectors', 'company_id', 'sector_id');
     }
 }

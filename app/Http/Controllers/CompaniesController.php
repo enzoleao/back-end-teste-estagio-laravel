@@ -4,17 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Companies;
+use App\Models\Sectors;
+
 
 class CompaniesController extends Controller
 {
     public function index()
     {
-        return Companies::all();
+        $response = Companies::with('sectors')->get();
+
+
+        return response()-> json([
+            'companies' => $response
+        ], 200);
     }
 
     public function show($id)
     {
-        return Companies::find($id);
+        $company = Companies::findOrFail($id);
+        $sectors = Sectors::all();
+        return compact('company', 'sectors');
     }
 
     public function store(Request $request)
