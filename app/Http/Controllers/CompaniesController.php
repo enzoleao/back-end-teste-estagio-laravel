@@ -12,8 +12,6 @@ class CompaniesController extends Controller
     public function index()
     {
         $response = Companies::with('sectors')->get();
-
-
         return response()-> json([
             'companies' => $response
         ], 200);
@@ -21,14 +19,25 @@ class CompaniesController extends Controller
 
     public function show($id)
     {
-        $company = Companies::findOrFail($id);
-        $sectors = Sectors::all();
-        return compact('company', 'sectors');
+        $company = Companies::findOrFail($id)::with('sectors')->get();
+        return response()-> json([
+            'companies' => $company
+        ], 200);
     }
 
     public function store(Request $request)
-    {
-        return Companies::create($request->all());
+    {   
+
+          $sec = $request->only('sectorsId');
+          $sectorsId = $sec['sectorsId'];
+
+           $companies = Companies::create($request->all());
+           $companies->sectors()->attach($sectorsId);
+        
+        return response()-> json([
+            'message'=> 'Empresa cadastrada com sucesso',
+            'companies' => $companies
+        ], 200);
     }
 
     public function update(Request $request, $id)
@@ -41,9 +50,9 @@ class CompaniesController extends Controller
 
     public function delete(Request $request, $id)
     {
-        $companies = Article::findOrFail($id);
+        $companies = Companies::findOrFail($id);
         $companies->delete();
 
-        return 204;
+        return $companies;
     }
 }
