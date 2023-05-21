@@ -7,7 +7,7 @@ use App\Http\Controllers\SectorsController;
 
 
 Route::get('companies', [CompaniesController:: class, 'index']);
-Route::get('companies/{id}', [CompaniesController:: class, 'show']);
+Route::get('companies/{companyInitials}', [CompaniesController:: class, 'search']);
 Route::post('companies', [CompaniesController:: class, 'store']);
 Route::put('companies/{id}', [CompaniesController:: class, 'update']);
 Route::delete('companies/{id}', [CompaniesController:: class, 'delete']);
