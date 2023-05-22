@@ -27,7 +27,7 @@ class CompaniesController extends Controller
     }
     public function searchBySec($sectorsInitials)
     {
-        $company = Companies::with('sectors')->whereHas('sectors', function($q) {
+        $company = Companies::with('sectors')->whereHas('sectors', function($q) use ($sectorsInitials) {
             $q -> where('name', 'like', $sectorsInitials . '%');
         })->get();
         return response()-> json([
