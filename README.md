@@ -32,7 +32,7 @@ php artisan migrate
 
 php artisan db:seed --class=SectorsStart
 
-php artisan dev
+php artisan serve
 
 ```
 

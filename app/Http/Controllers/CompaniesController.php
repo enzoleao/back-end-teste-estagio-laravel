@@ -25,7 +25,15 @@ class CompaniesController extends Controller
             'companies' => $company 
         ], 200);
     }
-
+    public function searchBySec($sectorsInitials)
+    {
+        $company = Companies::with('sectors')->whereHas('sectors', function($q) {
+            $q -> where('name', 'like', $sectorsInitials . '%');
+        })->get();
+        return response()-> json([
+            'companies' => $company 
+        ], 200);
+    }
     public function store(Request $request)
     {   
         $validator = Validator::make($request->all(), [
