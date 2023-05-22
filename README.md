@@ -41,7 +41,8 @@ php artisan serve
 ##### Companies
 
 - [x] GET /companies  
-- [x] GET /companies/{companyId} 
+- [x] GET /companies/{companyName} 
+- [x] GET /search/{sectorName} 
 - [x] POST /companies 
 
 ##### Sectors
@@ -53,7 +54,8 @@ php artisan serve
 - [x] Integração com banco de dados MySQL
 - [x] Registro de Empresas e os setores que a mesma atua.
 - [x] Retorno de todas as empresas e seus respectivos setores cadastradas.
-
+- [x] Pesquisa de empresas por nome e setor
+- [x] Ordenação alfabetica das empresas 
 
 ### Tecnologias
 
