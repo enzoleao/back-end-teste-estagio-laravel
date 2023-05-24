@@ -47,8 +47,8 @@ class CompaniesController extends Controller
             'sectors' => 'Setores'
         ]);
         $validator->setCustomMessages([
-            'name.required' => 'O campo :attribute é obrigatório.',
-            'cnpj.required' => 'O campo :attribute é obrigatório.',
+            'name.required' => 'Por favor, preencha o campo :attribute.',
+            'cnpj.required' => 'Por favor, preencha o campo :attribute.',
             'cnpj.min' => 'Por favor, insira um :attribute válido.',
             'sectors.required' => 'Por favor, selecione os :attribute.',
         ]);
