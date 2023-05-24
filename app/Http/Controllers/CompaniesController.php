@@ -75,7 +75,6 @@ class CompaniesController extends Controller
             'company' => $companies
         ], 200);
     }
-
     public function update(Request $request, $id)
     {
         $companies = Companies::findOrFail($id);
@@ -83,9 +82,8 @@ class CompaniesController extends Controller
 
         return $companies;
     }
-
     public function delete(Request $request, $id)
-    {
+    {   
         $companies = Companies::findOrFail($id);
         $companies->delete();
 
