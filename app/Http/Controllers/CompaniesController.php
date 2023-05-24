@@ -39,22 +39,40 @@ class CompaniesController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'cnpj' => 'required|min:18',
-            'sectorsId' => 'required',
+            'sectors' => 'required',
+        ]);
+        $validator->setAttributeNames([
+            'name' => 'Nome da Empresa',
+            'cnpj' => 'CNPJ',
+            'sectors' => 'Setores'
+        ]);
+        $validator->setCustomMessages([
+            'name.required' => 'O campo :attribute é obrigatório.',
+            'cnpj.required' => 'O campo :attribute é obrigatório.',
+            'cnpj.min' => 'Por favor, insira os :attribute válido.',
+            'sectors.required' => 'Por favor, selecione os :attribute.',
         ]);
         if ($validator->fails()) {
-            $erros = $validator->errors();
-            return response()->json(['erro' => $erros->first()], 400);
+            $errors = $validator->errors();
+            foreach ($errors->all() as $error) {
+                return response()->json(['error' => $error,], 422);
+            }
         }
+        $companyExists = Companies::where('cnpj', $request['cnpj'])->exists();
 
-        $sec = $request->only('sectorsId');
-        $sectorsId = $sec['sectorsId'];
-
+        if ($companyExists) {
+            return response()->json(['error' => 'Já existe uma empresa cadastrada com esse CNPJ.'], 400);
+        }
+        $sectorsId = [];
+        foreach($request['sectors'] as $sectors) {
+            $sectorsId[] = $sectors['id'];
+        }
         $companies = Companies::create($request->all());
         $companies->sectors()->attach($sectorsId);
         
         return response()-> json([
             'message'=> 'Empresa cadastrada com sucesso',
-            'companies' => $companies
+            'company' => $companies
         ], 200);
     }
 
