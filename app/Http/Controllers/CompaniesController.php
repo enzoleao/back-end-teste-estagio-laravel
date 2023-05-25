@@ -63,10 +63,9 @@ class CompaniesController extends Controller
         if ($companyExists) {
             return response()->json(['error' => 'Já existe uma empresa cadastrada com esse CNPJ.'], 400);
         }
-        $sectorsId = [];
-        foreach($request['sectors'] as $sectors) {
-            $sectorsId[] = $sectors['id'];
-        }
+       
+        $sectorsId = $request['sectors']; 
+        
         $companies = Companies::create($request->all());
         $companies->sectors()->attach($sectorsId);
         
