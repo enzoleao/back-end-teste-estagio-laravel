@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Companies extends Model
 {
     use HasFactory;
+    protected $hidden = array('pivot');
     protected $fillable = ['name','cnpj'];
     
     public function sectors()

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Companies;
 use App\Models\Sectors;
@@ -12,10 +13,12 @@ class CompaniesController extends Controller
     public function index(Request $request)
     {   
         
+        if (filter_var($request['order'], FILTER_VALIDATE_BOOLEAN) === true) {
+            $response = Companies::with('sectors')->orderBy('name')->paginate(10);
+            return response()-> json(['companies' => $response], 200);
+        }
         $response = Companies::with('sectors')->paginate(10);
-        return response()-> json([
-            'companies' => $response
-        ], 200);
+        return response()-> json(['companies' => $response], 200);
     }
 
     public function search($companyInitials)
