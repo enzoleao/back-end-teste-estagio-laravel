@@ -78,11 +78,40 @@ class CompaniesController extends Controller
         ], 200);
     }
     public function update(Request $request, $id)
-    {
-        $companies = Companies::findOrFail($id);
-        $companies ->update($request->all());
+    {   
+        $validator = Validator::make($request->all(), [
+        'name' => 'required',
+        'cnpj' => 'required|min:18',
+        'sectors' => 'required',
+        ]);
+        $validator->setAttributeNames([
+            'name' => 'Nome da Empresa',
+            'cnpj' => 'CNPJ',
+            'sectors' => 'Setores'
+        ]);
+        $validator->setCustomMessages([
+            'name.required' => 'Por favor, preencha o campo :attribute.',
+            'cnpj.required' => 'Por favor, preencha o campo :attribute.',
+            'cnpj.min' => 'Por favor, insira um :attribute válido.',
+            'sectors.required' => 'Por favor, selecione os :attribute.',
+        ]);
+    if ($validator->fails()) {
+        $errors = $validator->errors();
+        foreach ($errors->all() as $error) {
+            return response()->json(['error' => $error,], 422);
+        }
+    }
+    $companyExists = Companies::where('cnpj', $request['cnpj'])->first();
+    if ($companyExists !== null) {
+        if ($companyExists['id'] != intval($id)) {
+            return response()->json(['error' => 'Já existe uma empresa cadastrada com esse CNPJ.'], 400);
+        }
+    }
 
-        return $companies;
+        $user = Companies::find($id);
+        $user->update($request->all());
+        $user->sectors()->sync($request['sectors']);
+        return response()->json($user);
     }
     public function delete(Request $request, $id)
     {   
