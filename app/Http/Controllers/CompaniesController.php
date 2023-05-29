@@ -54,7 +54,7 @@ class CompaniesController extends Controller
             'sectors.required' => 'Por favor, selecione os :attribute.',
         ]);
         if ($validator->fails()) {
-            $errors = $validator->errors()->first();
+            $errors = $validator->messages()->all();
             return response()->json(['error' => $errors], 400);
   
         }
