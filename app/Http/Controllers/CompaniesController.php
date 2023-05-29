@@ -19,15 +19,29 @@ class CompaniesController extends Controller
         $response = Companies::with('sectors')->paginate(10);
         return response()-> json(['companies' => $response], 200);
     }
-    public function search($companyInitials)
-    {
-        $company = Companies::with('sectors')->where('name', 'like', $companyInitials . '%')->get();
-        return response()-> json([
-            'companies' => $company 
-        ], 200);
+    public function search(Request $request, $companyInitials)
+    {   
+        if (filter_var($request['order'], FILTER_VALIDATE_BOOLEAN) === true) {
+            $company = Companies::with('sectors')->where('name', 'like', $companyInitials . '%')->orderBy('name')->get();
+            return response()-> json([
+                'companies' => $company 
+            ], 200);
+        }
+            $company = Companies::with('sectors')->where('name', 'like', $companyInitials . '%')->get();
+            return response()-> json([
+                'companies' => $company 
+            ], 200);
     }
-    public function searchBySec($sectorsInitials)
+    public function searchBySec(Request $request, $sectorsInitials)
     {
+        if (filter_var($request['order'], FILTER_VALIDATE_BOOLEAN) === true) {
+            $company = Companies::with('sectors')->whereHas('sectors', function($q) use ($sectorsInitials) {
+                $q -> where('name', 'like', $sectorsInitials . '%');
+            })->orderBy('name')->get();
+            return response()-> json([
+                'companies' => $company 
+            ], 200);
+        }
         $company = Companies::with('sectors')->whereHas('sectors', function($q) use ($sectorsInitials) {
             $q -> where('name', 'like', $sectorsInitials . '%');
         })->get();
@@ -60,7 +74,7 @@ class CompaniesController extends Controller
         }
         $companyExists = Companies::where('cnpj', $request['cnpj'])->exists();
         if ($companyExists) {
-            return response()->json(['error' => 'Já existe uma empresa cadastrada com esse CNPJ.'], 400);
+            return response()->json(['error' => ['Já existe uma empresa cadastrada com esse CNPJ.']], 400);
         }
         $sectorsId = $request['sectors']; 
         $companies = Companies::create($request->all());
@@ -90,7 +104,7 @@ class CompaniesController extends Controller
             'sectors.required' => 'Por favor, selecione os :attribute.',
         ]);
     if ($validator->fails()) {
-        $errors = $validator->errors()->first();
+        $errors = $validator->messages()->all();
         return response()->json(['error' => $errors], 400);
     }
     $companyExists = Companies::where('cnpj', $request['cnpj'])->first();
