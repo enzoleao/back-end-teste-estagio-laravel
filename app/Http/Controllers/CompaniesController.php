@@ -21,13 +21,7 @@ class CompaniesController extends Controller
     }
     public function search(Request $request, $companyInitials)
     {   
-        if (filter_var($request['order'], FILTER_VALIDATE_BOOLEAN) === true) {
             $company = Companies::with('sectors')->where('name', 'like', $companyInitials . '%')->orderBy('name')->get();
-            return response()-> json([
-                'companies' => $company 
-            ], 200);
-        }
-            $company = Companies::with('sectors')->where('name', 'like', $companyInitials . '%')->get();
             return response()-> json([
                 'companies' => $company 
             ], 200);
