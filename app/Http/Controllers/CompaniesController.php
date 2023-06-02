@@ -104,7 +104,7 @@ class CompaniesController extends Controller
     $companyExists = Companies::where('cnpj', $request['cnpj'])->first();
     if ($companyExists !== null) {
         if ($companyExists['id'] != intval($id)) {
-            return response()->json(['error' => 'Já existe uma empresa cadastrada com esse CNPJ.'], 400);
+            return response()->json(['error' => ['Já existe uma empresa cadastrada com esse CNPJ.']], 400);
         }
     }
         $companyUpdate = Companies::find($id);
